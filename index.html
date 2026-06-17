@@ -7,6 +7,7 @@
 
 body{
     margin:0;
+    padding:0;
 }
 
 .compare{
@@ -20,36 +21,37 @@ body{
     position:absolute;
     top:0;
     left:0;
-    width:100%;
-    height:100%;
+    width:800px;
+    height:450px;
     object-fit:cover;
 }
 
-.overlay{
+.before{
     position:absolute;
     top:0;
     left:0;
     width:50%;
     height:100%;
     overflow:hidden;
+    z-index:2;
 }
 
-.overlay img{
+.before img{
     position:absolute;
     top:0;
     left:0;
     width:800px;
     height:450px;
-    object-fit:cover;
 }
 
 .slider{
     position:absolute;
-    left:50%;
     top:0;
+    left:50%;
     width:3px;
     height:100%;
     background:white;
+    z-index:10;
     cursor:ew-resize;
 }
 
@@ -72,11 +74,13 @@ body{
 
 <div class="compare" id="compare">
 
-<img src="after.png">
+    <!-- 아래층 -->
+    <img src="after.png">
 
-<div class="overlay" id="overlay">
-    <img src="before.png">
-</div>
+    <!-- 위층 -->
+    <div class="before" id="beforeLayer">
+        <img src="before.png">
+    </div>
 
     <div class="slider" id="slider">
         <div class="knob"></div>
@@ -86,29 +90,34 @@ body{
 
 <script>
 
-const compare=document.getElementById("compare");
-const overlay=document.getElementById("overlay");
-const slider=document.getElementById("slider");
+const compare = document.getElementById('compare');
+const beforeLayer = document.getElementById('beforeLayer');
+const slider = document.getElementById('slider');
 
-let drag=false;
+let dragging = false;
 
-slider.onmousedown=()=>drag=true;
+slider.addEventListener('mousedown', () => {
+    dragging = true;
+});
 
-window.onmouseup=()=>drag=false;
+window.addEventListener('mouseup', () => {
+    dragging = false;
+});
 
-window.onmousemove=(e)=>{
+window.addEventListener('mousemove', (e) => {
 
-    if(!drag) return;
+    if(!dragging) return;
 
-    const rect=compare.getBoundingClientRect();
+    const rect = compare.getBoundingClientRect();
 
-    let x=e.clientX-rect.left;
+    let x = e.clientX - rect.left;
 
-    x=Math.max(0,Math.min(x,rect.width));
+    x = Math.max(0, Math.min(x, rect.width));
 
-    overlay.style.width=x+"px";
-    slider.style.left=x+"px";
-}
+    beforeLayer.style.width = x + 'px';
+    slider.style.left = x + 'px';
+
+});
 
 </script>
 
